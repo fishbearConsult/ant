@@ -1,5 +1,5 @@
 <template>
-    <div>footer</div>
+    <div>鱼熊企管咨询</div>
 </template>
 
 <script>
