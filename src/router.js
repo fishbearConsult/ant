@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-
+import notFound from './views/404.vue'
+import NProgress from "nprogress";
+import "nprogress/nprogress.css"
 Vue.use(Router)
 
-export default new Router({
+var router= new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -66,6 +67,27 @@ export default new Router({
               path:"/form/basicForm",
               name:"basicForm",
               component:()=>import(/* webpackChunkName: "form" */ "./views/form/basicForm")
+            },
+            {
+              path:"/form/stepForm",
+              name:"stepForm",
+              component:()=>import(/* webpackChunkName: "form" */ "./views/form/stepForm/index.vue"),
+              children:[
+                {
+                  path:"/form/stepForm",
+                  redirect:"/form/stepForm/info"
+                },
+                {
+                  path:"/form/stepForm/info",
+                  name:"info",
+                  component:()=>import(/* webpackChunkName: "form" */ "./views/form/stepForm/step1"),
+                },
+                {
+                  path:"/form/stepForm/confirm",
+                  name:"confirm",
+                  component:()=>import(/* webpackChunkName: "form" */ "./views/form/stepForm/step2"),
+                }
+              ]
             }
           ]
         }
@@ -73,17 +95,19 @@ export default new Router({
       
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    },
-    {
       path:"*",
       name:"404",
+      component:notFound
 
     }
   ]
 })
+
+router.beforeEach((to,from,next)=>{
+  NProgress.start();
+  next()
+});
+router.afterEach(()=>{
+  NProgress.done();
+})
+export default router;
