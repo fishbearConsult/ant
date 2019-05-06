@@ -1,13 +1,29 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-
+import RenderRouterView from "./components/renderRouterView"
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '/user',
+      component:RenderRouterView,
+      children:[
+        {
+          path:"/user/login",
+          name:"login",
+          component:()=> import(/* webpackChunkName: "user" */ './views/user/login.vue')
+        },
+        {
+          path:"/user/register",
+          name:"register",
+          component:()=> import(/* webpackChunkName: "user" */ './views/user/register.vue')
+        }
+      ]
+    },
     {
       path: '/',
       name: 'home',
