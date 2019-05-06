@@ -1,5 +1,5 @@
 <template>
-    <router-view></router-view>
+    <div>仪表板/分析图</div>
 </template>
 
 <script>
