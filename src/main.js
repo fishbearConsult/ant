@@ -6,7 +6,7 @@ import "ant-design-vue/lib/button/style"
 import router from './router'
 import store from './store'
 import './registerServiceWorker'
-//崔振说你不知能
+
 Vue.config.productionTip = false
 Vue.use(Button);
 new Vue({
