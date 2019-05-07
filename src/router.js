@@ -11,6 +11,7 @@ var router= new Router({
   routes: [
     {
       path: '/user',
+      hideInMenu:true,
       component:()=> import(/* webpackChunkName: "layout" */ './layout/userLayout.vue'),
       children:[
        
@@ -41,6 +42,7 @@ var router= new Router({
         {
           path:"/dashboard",
           name:"dashboard",
+          meta:{icon:"dashboard",title:"仪表盘"},
           component:{render:h=>h("router-view")},
           children:[
             {
@@ -50,6 +52,7 @@ var router= new Router({
             {
               path:"/dashboard/analysis",
               name:"analysis",
+              meta:{title:"分析页"},
               component:()=>import(/* webpackChunkName: "dashboard" */ "./views/dashboard/analysis")
             }
           ]
@@ -57,6 +60,7 @@ var router= new Router({
         {
           path:"/form",
           name:"form",
+          meta:{icon:"form",title:"表单"},
           component:{render:h=>h("router-view")},
           children:[
             {
@@ -66,11 +70,14 @@ var router= new Router({
             {
               path:"/form/basicForm",
               name:"basicForm",
+              meta:{title:"基础表单"},
               component:()=>import(/* webpackChunkName: "form" */ "./views/form/basicForm")
             },
             {
               path:"/form/stepForm",
               name:"stepForm",
+              meta:{title:"分布表单"},
+              hideChildren:true,
               component:()=>import(/* webpackChunkName: "form" */ "./views/form/stepForm/index.vue"),
               children:[
                 {
@@ -96,6 +103,7 @@ var router= new Router({
     },
     {
       path:"*",
+      hideInMenu:true,
       name:"404",
       component:notFound
 
