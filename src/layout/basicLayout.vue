@@ -1,9 +1,12 @@
 <template>
-  <div>
+  <div :class="[`nav-theme-${navThume}`, `nav-layout-${navPosition}`]">
     <a-layout id="components-layout-demo-side" style="min-height: 100vh">
-      <a-layout-sider :trigger="null" collapsible v-model="collapsed">
-        <div class="logo"/>
-        <side-menu></side-menu>
+      <a-layout-sider width="256px" v-if="navPosition==='left'"
+       :theme="navThume" :trigger="null" 
+       collapsible
+        v-model="collapsed">
+        <div class="logo"> fishbearConsult</div>
+        <side-menu :theme="navThume"></side-menu>
       </a-layout-sider>
       <a-layout>
         <a-layout-header style="background: #fff; padding: 0">
@@ -38,6 +41,14 @@ export default {
     sideMenu,
     layoutSettings
   },
+  computed:{
+    navThume(){
+     return this.$route.query.navThume ||"dark";
+    },
+    navPosition(){
+      return this.$route.query.navPosition ||"left";
+    }
+  },
   data() {
     return {
       collapsed: false
@@ -46,7 +57,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style  scoped>
 #components-layout-demo-side .logo {
   height: 32px;
   background: rgba(255, 255, 255, 0.2);
@@ -60,5 +71,14 @@ export default {
 .trigger:hover {
   background-color: #eee;
   font-size: 20px;
+}
+.nav-theme-dark >>> .logo{
+  color:white;
+}
+.logo{
+  height:32px;
+  line-height: 32px;
+  text-align: center;
+  overflow: hidden;
 }
 </style>
