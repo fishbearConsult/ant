@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import notFound from './views/404.vue'
+import forbid from './views/forbid.vue'
 import NProgress from "nprogress";
+import findLast from "lodash/findLast"
 import "nprogress/nprogress.css"
+import {Notification} from "ant-design-vue"
+import {checkAuth,isLogin} from './utils/auth'
 Vue.use(Router)
 
 var router= new Router({
@@ -12,6 +16,7 @@ var router= new Router({
     {
       path: '/user',
       hideInMenu:true,
+      
       component:()=> import(/* webpackChunkName: "layout" */ './layout/userLayout.vue'),
       children:[
        
@@ -42,7 +47,7 @@ var router= new Router({
         {
           path:"/dashboard",
           name:"dashboard",
-          meta:{icon:"dashboard",title:"仪表盘"},
+          meta:{icon:"dashboard",title:"仪表盘",auth:["admin","user"]},
           component:{render:h=>h("router-view")},
           children:[
             {
@@ -60,7 +65,7 @@ var router= new Router({
         {
           path:"/form",
           name:"form",
-          meta:{icon:"form",title:"表单"},
+          meta:{icon:"form",title:"表单",auth:["admin"],},
           component:{render:h=>h("router-view")},
           children:[
             {
@@ -76,7 +81,7 @@ var router= new Router({
             {
               path:"/form/stepForm",
               name:"stepForm",
-              meta:{title:"分布表单"},
+              meta:{title:"分步表单"},
               hideChildren:true,
               component:()=>import(/* webpackChunkName: "form" */ "./views/form/stepForm/index.vue"),
               children:[
@@ -105,6 +110,13 @@ var router= new Router({
       path:"*",
       hideInMenu:true,
       name:"404",
+      component:forbid
+
+    },
+    {
+      path:"/403",
+      hideInMenu:true,
+      name:"403",
       component:notFound
 
     }
@@ -116,6 +128,25 @@ router.beforeEach((to,from,next)=>{
     NProgress.start();
   }
   
+  const record=findLast(to.matched,record=>record.meta.auth);
+  
+  if(record && ! checkAuth(record.meta.auth)){
+   
+    if(!isLogin() && to.path!=="/user/login"){
+      next({
+        path:"/user/login"
+      })
+    }else{
+     
+      Notification.error({
+        message: '403',
+        description: '请联系管理员申请相关操作权限',
+      });
+      next({
+        path:"/403"
+      })
+    }
+  }
   next()
 });
 router.afterEach(()=>{
